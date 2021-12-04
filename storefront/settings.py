@@ -32,18 +32,26 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'django.contrib.admin',
-    'django.contrib.sessions',
     'django.contrib.auth',
     'django.contrib.contenttypes',
+    'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+
+    # Own apps
+    'playground.apps.PlaygroundConfig',
+    'store.apps.StoreConfig',
+    'store_custom.apps.StoreCustomConfig',
+    'tags.apps.TagsConfig',
+    'likes.apps.LikesConfig',
+
+    # DRF apps
     'rest_framework',
-    'playground',
+
+    # Third Party apps (Packages)
     'debug_toolbar',
-    'store',
-    'store_custom',
-    'tags',
-    'likes'
+    'django_filters',
 ]
 
 MIDDLEWARE = [
@@ -56,6 +64,15 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+REST_FRAMEWORK = {
+    'COERCE_DECIMAL_TO_STRING': False,
+    'DEFAULT_FILTER_BACKENDS': (
+        'django_filters.rest_framework.DjangoFilterBackend',
+        'rest_framework.filters.SearchFilter'
+    ),
+}
+
 
 INTERNAL_IPS = [
     # ...
@@ -143,6 +160,3 @@ STATIC_URL = '/static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-REST_FRAMEWORK = {
-    'COERCE_DECIMAL_TO_STRING': False
-}
