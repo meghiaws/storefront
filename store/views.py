@@ -6,8 +6,8 @@ from rest_framework import mixins
 from rest_framework.filters import SearchFilter
 from django_filters.rest_framework import DjangoFilterBackend
 
-from .models import Cart, CartItem, Collection, OrderItem, Product, Review
-from .serializers import AddCartItemSerializer, CartItemSerializer, CartSerializer, CollectionSerializer, ProductListCreateSerializer, ProductDetailSerializer, ReviewSerializer, UpdateCartItemSerializer
+from .models import Cart, CartItem, Collection, Customer, OrderItem, Product, Review
+from .serializers import AddCartItemSerializer, CartItemSerializer, CartSerializer, CollectionSerializer, CustomerSerializer, ProductListCreateSerializer, ProductDetailSerializer, ReviewSerializer, UpdateCartItemSerializer
 from .filters import ProductFilter
 from .pagination import DefaultPagination
 
@@ -66,7 +66,7 @@ class CartViewSet(mixins.CreateModelMixin,
 class CartItemViewSet(ModelViewSet):
     serializer_class = CartItemSerializer
     http_method_names = ['get', 'post', 'patch', 'delete']
-    
+
     def get_serializer_class(self):
         if self.action == 'create':
             return AddCartItemSerializer
@@ -81,3 +81,12 @@ class CartItemViewSet(ModelViewSet):
 
     def get_serializer_context(self):
         return {'cart_id': self.kwargs['cart_pk']}
+
+
+class CustomerViewSet(mixins.RetrieveModelMixin,
+                      mixins.UpdateModelMixin,
+                      mixins.CreateModelMixin,
+                      GenericViewSet):
+                
+    queryset = Customer.objects.all()
+    serializer_class = CustomerSerializer
