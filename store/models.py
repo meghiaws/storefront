@@ -58,7 +58,8 @@ class Customer(models.Model):
         (MEMBERSHIP_GOLD, 'Gold'),
     ]
 
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     phone = models.CharField(max_length=255)
     birth_date = models.DateField(null=True, blank=True)
     membership = models.CharField(
@@ -66,7 +67,7 @@ class Customer(models.Model):
 
     @admin.display(ordering='user__first_name')
     def first_name(self):
-        return self.user.first_name    
+        return self.user.first_name
 
     @admin.display(ordering='user__last_name')
     def last_name(self):
@@ -77,6 +78,9 @@ class Customer(models.Model):
 
     class Meta:
         ordering = ['user__first_name', 'user__last_name']
+        permissions = [
+            ('view_history', 'Can view history'),
+        ]
 
 
 class Order(models.Model):
@@ -94,9 +98,15 @@ class Order(models.Model):
         max_length=1, choices=PAYMENT_STATUS_CHOICES, default=PAYMENT_STATUS_PENDING)
     customer = models.ForeignKey(Customer, on_delete=models.PROTECT)
 
+    class Meta:
+        permissions = {
+            ('cancel_order', 'Can cancel order')
+        }
+
 
 class OrderItem(models.Model):
-    order = models.ForeignKey(Order, on_delete=models.PROTECT)
+    order = models.ForeignKey(
+        Order, on_delete=models.PROTECT, related_name='items')
     product = models.ForeignKey(
         Product, on_delete=models.PROTECT, related_name='orderitems')
     quantity = models.PositiveSmallIntegerField()
@@ -125,7 +135,8 @@ class CartItem(models.Model):
 
     class Meta:
         constraints = [
-            UniqueConstraint(fields=['cart', 'product'], name='unique_product_in_cart')
+            UniqueConstraint(fields=['cart', 'product'],
+                             name='unique_product_in_cart')
         ]
 
 
