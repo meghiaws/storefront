@@ -1,21 +1,43 @@
 from django.db.models import Count
-from rest_framework import serializers, status, views
-from rest_framework.permissions import IsAdminUser, DjangoModelPermissions
+from rest_framework import status
+from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.viewsets import GenericViewSet, ModelViewSet, ViewSet
-from rest_framework.decorators import action, authentication_classes, permission_classes
+from rest_framework.viewsets import GenericViewSet, ModelViewSet
+from rest_framework.decorators import action
 from rest_framework import mixins
 from rest_framework.filters import SearchFilter
 from django_filters.rest_framework import DjangoFilterBackend
 
 from store.permissions import IsAdminOrReadOnly
 
-from .models import Cart, CartItem, Collection, Customer, Order, OrderItem, Product, ProductImage, Review
-from .serializers import (AddCartItemSerializer, CartItemSerializer, CartSerializer, CollectionSerializer, CreateOrderSerializer,
-                          CustomerSerializer, OrderSerializer, ProductImageSerializer,
-                          ProductListSerializer, ProductCreateUpdateSerializer, ProductDetailSerializer,
-                          ReviewSerializer, UpdateCartItemSerializer, UpdateOrderSerializer)
+from .models import (
+    Cart,
+    CartItem,
+    Collection,
+    Customer,
+    Order,
+    OrderItem,
+    Product,
+    ProductImage,
+    Review,
+)
+from .serializers import (
+    AddCartItemSerializer,
+    CartItemSerializer,
+    CartSerializer,
+    CollectionSerializer,
+    CreateOrderSerializer,
+    CustomerSerializer,
+    OrderSerializer,
+    ProductImageSerializer,
+    ProductListSerializer,
+    ProductCreateUpdateSerializer,
+    ProductDetailSerializer,
+    ReviewSerializer,
+    UpdateCartItemSerializer,
+    UpdateOrderSerializer,
+)
 from .filters import ProductFilter
 from .pagination import DefaultPagination
 
