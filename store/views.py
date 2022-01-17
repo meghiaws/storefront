@@ -1,10 +1,9 @@
 from django.db.models import Count
-from django.http import request
 from rest_framework import serializers, status, views
 from rest_framework.permissions import IsAdminUser, DjangoModelPermissions
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.viewsets import GenericViewSet, ModelViewSet
+from rest_framework.viewsets import GenericViewSet, ModelViewSet, ViewSet
 from rest_framework.decorators import action, authentication_classes, permission_classes
 from rest_framework import mixins
 from rest_framework.filters import SearchFilter
@@ -12,9 +11,9 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 from store.permissions import IsAdminOrReadOnly
 
-from .models import Cart, CartItem, Collection, Customer, Order, OrderItem, Product, Review
+from .models import Cart, CartItem, Collection, Customer, Order, OrderItem, Product, ProductImage, Review
 from .serializers import (AddCartItemSerializer, CartItemSerializer, CartSerializer, CollectionSerializer, CreateOrderSerializer,
-                          CustomerSerializer, OrderSerializer,
+                          CustomerSerializer, OrderSerializer, ProductImageSerializer,
                           ProductListSerializer, ProductCreateUpdateSerializer, ProductDetailSerializer,
                           ReviewSerializer, UpdateCartItemSerializer, UpdateOrderSerializer)
 from .filters import ProductFilter
@@ -22,8 +21,10 @@ from .pagination import DefaultPagination
 
 
 class ProductViewSet(ModelViewSet):
-    queryset = Product.objects.select_related(
-        'collection').order_by('unit_price')
+    queryset = Product.objects \
+        .select_related('collection') \
+        .prefetch_related('images') \
+        .order_by('id')
     filter_backend = (DjangoFilterBackend, SearchFilter)
     filterset_class = ProductFilter
     search_fields = ('title', 'description')
@@ -43,6 +44,16 @@ class ProductViewSet(ModelViewSet):
         return super().destroy(request, *args, **kwargs)
 
 
+class ProductImageViewSet(ModelViewSet):
+    serializer_class = ProductImageSerializer
+
+    def get_queryset(self):
+        return ProductImage.objects.filter(product_id=self.kwargs['product_pk'])
+
+    def get_serializer_context(self):
+        return {'product_id': self.kwargs['product_pk']}
+
+
 class CollectionViewSet(ModelViewSet):
     queryset = Collection.objects.annotate(
         products_count=Count('products')).order_by('id')
@@ -58,7 +69,7 @@ class CollectionViewSet(ModelViewSet):
 
 class ReviewViewSet(ModelViewSet):
     serializer_class = ReviewSerializer
-
+    
     def get_queryset(self):
         return Review.objects.filter(product_id=self.kwargs['product_pk'])
 

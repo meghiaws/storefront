@@ -7,7 +7,7 @@ from rest_framework import serializers
 
 from .signals import order_created
 from .models import (Cart, CartItem, Collection, Customer, Order, OrderItem,
-                     Product, Review)
+                     Product, ProductImage, Review)
 
 
 class CollectionSerializer(serializers.ModelSerializer):
@@ -18,12 +18,25 @@ class CollectionSerializer(serializers.ModelSerializer):
     products_count = serializers.IntegerField(read_only=True)
 
 
+class ProductImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductImage
+        fields = ['id', 'image']
+
+    def save(self, **kwargs):
+        return super().save(**kwargs)
+
+    def create(self, validated_data):
+        return ProductImage.objects.create(product_id=self.context['product_id'], **validated_data)
+
+
 class ProductListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = ['id', 'title', 'slug', 'description',
-                  'price', 'tax', 'collection']
+                  'price', 'tax', 'collection', 'images']
 
+    images = ProductImageSerializer(many=True, read_only=True)
     price = serializers.DecimalField(
         max_digits=6, decimal_places=2, source='unit_price')
     tax = serializers.SerializerMethodField(method_name="calculate_tax")
@@ -44,8 +57,9 @@ class ProductDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = ['id', 'title', 'slug', 'description',
-                  'price', 'tax', 'collection']
+                  'price', 'tax', 'collection', 'images']
 
+    images = ProductImageSerializer(many=True, read_only=True)
     price = serializers.DecimalField(
         max_digits=6, decimal_places=2, source='unit_price')
     tax = serializers.SerializerMethodField(method_name="calculate_tax")
@@ -53,6 +67,7 @@ class ProductDetailSerializer(serializers.ModelSerializer):
 
     def calculate_tax(self, product: Product):
         return product.unit_price * Decimal(1.1)
+
 
 
 class ReviewSerializer(serializers.ModelSerializer):

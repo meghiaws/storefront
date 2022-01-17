@@ -1,12 +1,15 @@
 from uuid import uuid4
 from django.conf import settings
 from django.contrib import admin
+from django.core import validators
 
 from django.core.validators import MinValueValidator
 from django.db import models
 from django.db.models import constraints
 from django.db.models.constraints import UniqueConstraint
 from django.db.models.fields import related
+
+from store.validators import validate_file_size
 
 
 class Promotion(models.Model):
@@ -45,6 +48,14 @@ class Product(models.Model):
 
     class Meta:
         ordering = ['title']
+
+
+class ProductImage(models.Model):
+    product = models.ForeignKey(
+        Product, on_delete=models.CASCADE, related_name='images')
+    image = models.ImageField(
+        upload_to='store/images',
+        validators=[validate_file_size])
 
 
 class Customer(models.Model):
