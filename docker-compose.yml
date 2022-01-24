@@ -30,6 +30,15 @@ services:
     ports:
       - "5050:80"
 
+    redis:
+      image: redis:6.2.6-alpine
+      container_name: redis
+      ports:
+        - "6379:6379"
+      volumes:
+        - redisdata:/data
+      restart: always
+
 
 volumes:
   storefront_postgresql:
