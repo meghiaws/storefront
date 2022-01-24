@@ -195,3 +195,13 @@ EMAIL_HOST = 'localhost'
 EMAIL_PORT = 2525
 DEFAULT_FROM_EMAIL = 'from@meghiaws.com'
 
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/2",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
+}
+
