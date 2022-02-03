@@ -87,7 +87,6 @@ six==1.16.0
 social-auth-app-django==4.0.0
 social-auth-core==4.2.0
 sqlparse==0.4.2
-storefront==0.1.0
 toml==0.10.2
 tomli==1.2.3
 tornado==6.1
