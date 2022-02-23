@@ -1,19 +1,34 @@
-version: "3"
+version: '3.9'
 
 services:
 
-  storefront_postgresql:
-    image: postgres:13
-    container_name: storefront_postgresql
+  web:
+    build: .
+    command: ./docker-entrypoint.sh
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+      - postgresql
+    env_file: .env
+    restart: on-failure
     volumes:
-      - storefront_postgresql:/var/lib/postgresql/data
+      - .:/app
+    networks:
+      - postgres_network
+
+  postgresql:
+    image: postgres:13.6
+    container_name: postgresql
+    volumes:
+      - postgresql_data:/var/lib/postgresql/data
     restart: always
     env_file: .env
     ports:
       - "5432:5432"
     networks:
-      - postgres
-      - storefront_network
+      - postgres_network
+      - pgadmin_network
 
   pgadmin:
     container_name: pgadmin4_container
@@ -26,27 +41,53 @@ services:
     volumes:
       - pgadmin:/var/lib/pgadmin
     networks:
-      - postgres
+      - pgadmin_network
     ports:
       - "5050:80"
 
-    redis:
-      image: redis:6.2.6-alpine
-      container_name: redis
-      ports:
-        - "6379:6379"
-      volumes:
-        - redisdata:/data
-      restart: always
+  redis:
+    image: redis:6.2-alpine
+    ports:
+      - "6379:6379"
+    restart: always
+    volumes:
+      - redisdata:/data
+  
+  celery:
+    build: .
+    command: celery -A storefront worker --loglevel=info
+    depends_on:
+      - redis
+    volumes:
+      - .:/app
 
+  celery-beat:
+    build: .
+    command: celery -A storefront beat --loglevel=info
+    depends_on:
+      - redis
+    volumes:
+      - .:/app
+
+  tests:
+    build: .
+    command: ptw
+    depends_on:
+      - web 
+      - redis
+      - postgresql
+    tty: true
+    volumes:
+      - .:/app
+    networks:
+      - postgres_network
 
 volumes:
-  storefront_postgresql:
-    external: true
+  postgresql_data:
   pgadmin:
+  redisdata:    
 
 networks:
-  storefront_network:
-    external: true
-  postgres:
+  postgres_network:
+  pgadmin_network:
     driver: bridge
