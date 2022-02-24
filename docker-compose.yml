@@ -9,7 +9,7 @@ services:
       - "8000:8000"
     depends_on:
       - redis
-      - postgresql
+      - db
     env_file: .env
     restart: on-failure
     volumes:
@@ -17,9 +17,8 @@ services:
     networks:
       - postgres_network
 
-  postgresql:
+  db:
     image: postgres:13.6
-    container_name: postgresql
     volumes:
       - postgresql_data:/var/lib/postgresql/data
     restart: always
@@ -40,6 +39,8 @@ services:
       PGADMIN_CONFIG_SERVER_MODE: 'False'
     volumes:
       - pgadmin:/var/lib/pgadmin
+    depends_on:
+      - db
     networks:
       - pgadmin_network
     ports:
@@ -75,7 +76,7 @@ services:
     depends_on:
       - web 
       - redis
-      - postgresql
+      - db
     tty: true
     volumes:
       - .:/app
