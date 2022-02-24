@@ -39,7 +39,6 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'django_filters',
     'djoser',
-    'silk'
 ]
 
 AUTH_USER_MODEL = 'core.User'
@@ -157,8 +156,6 @@ STATIC_ROOT = BASE_DIR / 'static'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-# Default primary key field type
-# https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
@@ -167,24 +164,6 @@ EMAIL_HOST = 'localhost'
 EMAIL_PORT = 2525
 DEFAULT_FROM_EMAIL = 'from@meghiaws.com'
 
-CELERY_BROKER_URL = 'redis://localhost:6379/1'
-CELERY_BEAT_SCHEDULE = {
-    'notify_customers': {
-        'task': 'playground.tasks.notify_customers',
-        'schedule': 5,
-        'args': ['hello celery beat']
-    }
-}
-
-CACHES = {
-    "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379/2",
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient",
-        }
-    }
-}
 
 LOGGING = {
     'version': 1,
