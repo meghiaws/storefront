@@ -34,17 +34,6 @@ git clone https://github.com/meghiaws/storefront.git && cd storefront && poetry 
 ```
 ⚠️ Please enter the required information in the .env and files before running the project.
 
-Create docker networks
-```
-docker network create postgres_network
-docker network create pgadmin_network
-```
-Create docker volumes
-```
-docker volume create postgresql_data
-docker volume create pgadmin
-docker volume create redisdata
-```
 Now you can run the project
 ```
 docker-compose up -d -build
