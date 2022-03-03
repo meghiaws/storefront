@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'django_filters',
     'djoser',
+    'drf_spectacular',
 ]
 
 AUTH_USER_MODEL = 'core.User'
@@ -52,8 +53,16 @@ REST_FRAMEWORK = {
         'django_filters.rest_framework.DjangoFilterBackend',
         'rest_framework.filters.SearchFilter'
     ),
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+
 }
-   
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Storefront API',
+    'DESCRIPTION': 'Storefront is a RESTful store :)',
+    'VERSION': '1.0.0'
+}
+
 SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('JWT',),
     'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
