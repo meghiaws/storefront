@@ -16,7 +16,7 @@ DATABASES = {
 
 CELERY_BROKER_URL = 'redis://redis:6379/1'
 
-CACHES = { 
+CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
         "LOCATION": "redis://redis:6379/2",
@@ -26,3 +26,7 @@ CACHES = {
     }
 }
 INSTALLED_APPS += ['silk']
+
+DEBUG_TOOLBAR_CONFIG = {
+    'SHOW_TOOLBAR_CALLBACK': lambda request: True
+}
