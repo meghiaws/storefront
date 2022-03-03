@@ -13,7 +13,7 @@ services:
     env_file: .env
     restart: on-failure
     volumes:
-      - .:/app
+      - .:/home/app/web
     networks:
       - postgres_network
 
@@ -74,12 +74,12 @@ services:
     build: .
     command: ptw
     depends_on:
-      - web 
+      # - web 
       - redis
       - db
     tty: true
     volumes:
-      - .:/app
+      - .:/home/app/web
     networks:
       - postgres_network
 
