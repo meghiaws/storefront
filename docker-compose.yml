@@ -18,7 +18,9 @@ services:
       - postgres_network
 
   db:
-    image: postgres:13.6
+    build:
+      context: .
+      dockerfile: db.Dockerfile
     volumes:
       - postgresql_data:/var/lib/postgresql/data
     restart: always
