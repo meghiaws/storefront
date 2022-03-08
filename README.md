@@ -36,7 +36,7 @@ git clone https://github.com/meghiaws/storefront.git && cd storefront && poetry 
 
 Now you can run the project
 ```
-docker-compose up -d -build
+docker-compose up -d --build
 ```
 You currently have 7 containers running
 - web
@@ -56,7 +56,7 @@ Using Swagger UI
 ```
 0.0.0.0:8000/docs
 ``` 
-Using Redoc 
+Using Redoc
 ```
 0.0.0.0:8000/redoc
 ```
