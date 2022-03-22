@@ -8,7 +8,7 @@ environ.Env.read_env(BASE_DIR / '.env')
 
 DEBUG = False
 
-SECRET_KEY = os.environ['SECRET_KEY']
+SECRET_KEY = env('SECRET_KEY')
 
 ALLOWED_HOSTS = env.list('ALLOWED_HOST')
 
