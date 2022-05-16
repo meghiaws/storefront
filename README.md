@@ -9,7 +9,6 @@ Storefront is a RESTful Store build with Django and Django Rest Framework.
 - Make an order by customers
 - Automatically remove shopping cart after making order
 - Ability to view and update user profiles for customers and admins
-- Easy insatllation
 - Production-ready configuration for Static Files, Database Settings, Gunicorn, Docker
 - Cloud-native design using 12-factor methodology
 
