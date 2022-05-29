@@ -53,9 +53,9 @@ You can access to all of the endpoints with OpenAPI schemas
 
 Using Swagger UI
 ```
-0.0.0.0:8000/docs
+http://0.0.0.0:8000/docs
 ``` 
 Using Redoc
 ```
-0.0.0.0:8000/redoc
+http://0.0.0.0:8000/redoc
 ```
